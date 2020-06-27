@@ -90,9 +90,9 @@ function AsyncPosts({
     return savedData;
   };
 
-  const [favoriteArray, setFavoriteArray] = useState([
-    retrieveFromLocalStorage(),
-  ]);
+  const [favoriteArray, setFavoriteArray] = useState(
+    retrieveFromLocalStorage()
+  );
   const addToFavoritesHandler = (subreddit) => {
     setFavoriteArray(favoriteArray.concat(subreddit));
     localStorage.favorites = JSON.stringify(favoriteArray);
