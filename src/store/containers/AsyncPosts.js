@@ -34,10 +34,12 @@ import {
   showSinglePost,
   goToSinglePost,
   addSubredditToFavorites,
+  fetchPopularSubList,
 } from "../actions";
 import PostPicker from "../components/PostPicker";
 import { Switch, Route, useHistory } from "react-router-dom";
 import FavoriteList from "../components/FavoriteList";
+import PopularSubredditList from "../components/PopularSubredditList";
 
 function AsyncPosts({
   posts,
@@ -47,23 +49,10 @@ function AsyncPosts({
   isFetching,
   recievedAt,
   favorites,
+  popularSubreddits,
 }) {
-  // console.log("POSTS:", posts);
   const [sub, setSub] = useState("");
-
-  const [
-    favoriteArrayFromLocalStorage,
-    setFavoriteArrayFromLocalStorage,
-  ] = useState([]);
-  // const [inputValue, setInputValue] = useState("");
   let history = useHistory();
-
-  function isEmpty(obj) {
-    for (var key in obj) {
-      if (obj.hasOwnProperty(key)) return false;
-    }
-    return true;
-  }
 
   const handleInputChange = (e) => {
     e.preventDefault();
@@ -94,9 +83,14 @@ function AsyncPosts({
     retrieveFromLocalStorage()
   );
   const addToFavoritesHandler = (subreddit) => {
+    dispatch(addSubredditToFavorites(subreddit));
     setFavoriteArray(favoriteArray.concat(subreddit));
     localStorage.favorites = JSON.stringify(favoriteArray);
   };
+
+  useEffect(() => {
+    dispatch(fetchPopularSubList());
+  }, []);
 
   useEffect(() => {
     localStorage.favorites = JSON.stringify(favoriteArray);
@@ -123,12 +117,16 @@ function AsyncPosts({
       <PostPicker onChange={handleInputChange} onClick={handleSubmit} />
       {sub && <button onClick={handleSubmit}>Search</button>}
 
+      <h2>Popular Subs</h2>
+      <PopularSubredditList popularSubreddits={popularSubreddits} />
+
       {sub && (
         <button onClick={() => addToFavoritesHandler(sub)}>
           Add to favourites
         </button>
       )}
 
+      <h2>My favorite subs</h2>
       <FavoriteList
         favorites={favorites}
         localStorageFav={retrieveFromLocalStorage}
@@ -152,7 +150,12 @@ function AsyncPosts({
 }
 
 const mapStateToProps = (state) => {
-  const { selectedSubreddit, postsBySubreddit, favorites } = state;
+  const {
+    selectedSubreddit,
+    postsBySubreddit,
+    favorites,
+    popularSubreddits,
+  } = state;
   console.log("STATE:", postsBySubreddit);
   const { isFetching, recievedAt, items: posts } = postsBySubreddit[
     selectedSubreddit
@@ -163,6 +166,7 @@ const mapStateToProps = (state) => {
     isFetching,
     recievedAt,
     favorites,
+    popularSubreddits,
   };
 };
 

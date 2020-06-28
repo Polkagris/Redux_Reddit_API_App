@@ -1,5 +1,6 @@
 // {
 //     selectedSubreddit: 'frontend',
+//     popularSubreddits: [],
 //     postsBySubreddit: {
 //       frontend: {
 //         isFetching: true,
@@ -35,12 +36,36 @@ import {
   GO_BACK,
   TO_SINGLEPOST,
   ADD_TO_FAVORITES,
+  REQUEST_POPULAR_SUBS,
+  RECIEVE_POPULAR_SUBS,
 } from "./actions";
 
 const selectedSubreddit = (state = "reactjs", action) => {
   switch (action.type) {
     case SELECT_SUBREDDIT:
       return action.subreddit;
+    default:
+      return state;
+  }
+};
+
+const popularSubreddits = (
+  state = { isFetching: false, items: [] },
+  action
+) => {
+  switch (action.type) {
+    case REQUEST_POPULAR_SUBS:
+      return {
+        ...state,
+        isFetching: true,
+      };
+    case RECIEVE_POPULAR_SUBS:
+      return {
+        ...state,
+        isFetching: false,
+        items: action.subredditList,
+        recievedAt: action.recievedAt,
+      };
     default:
       return state;
   }
@@ -137,6 +162,7 @@ const rootReducer = combineReducers({
   selectedSinglePost,
   navigation,
   favorites,
+  popularSubreddits,
 });
 
 export default rootReducer;

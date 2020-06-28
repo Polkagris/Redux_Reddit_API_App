@@ -1,6 +1,4 @@
 import fetch from "cross-fetch";
-import { useRouteMatch, useHistory } from "react-router-dom";
-
 export const INVALIDATE_SUBREDDIT = "INVALIDATE_SUBREDDIT";
 export const REQUEST_POSTS = "REQUEST_POSTS";
 export const RECIEVE_POST = "RECIEVE_POST";
@@ -9,6 +7,8 @@ export const SHOW_SINGLE_POST = "SHOW_SINGLE_POST";
 export const GO_BACK = "GO_BACK";
 export const TO_SINGLEPOST = "TO_SINGLEPOST";
 export const ADD_TO_FAVORITES = "ADD_TO_FAVORITES";
+export const REQUEST_POPULAR_SUBS = "REQUEST_POPULAR_SUBS";
+export const RECIEVE_POPULAR_SUBS = "RECIEVE_POPULAR_SUBS";
 
 export const invalidateSubreddit = (subreddit) => {
   return {
@@ -41,6 +41,7 @@ export const recievePosts = (subreddit, json) => {
   };
 };
 
+// Thunk
 export const fetchPosts = (subreddit) => {
   return (dispatch) => {
     dispatch(requestPosts(subreddit));
@@ -52,12 +53,7 @@ export const fetchPosts = (subreddit) => {
 
 // Fetch posts only when there are no posts
 export const shouldFetchPosts = (posts, subreddit) => {
-  console.log(
-    "################# State from should update: ################### ",
-    posts
-  );
   const hasPosts = posts.length > 0;
-  // console.log("STATE IN STORE:", store.getState());
   return (dispatch) => {
     if (hasPosts) {
       console.log("The app has posts!");
@@ -101,9 +97,36 @@ export const goToSinglePost = (page) => {
   };
 };
 
+// POPULAR SUBS
 export const addSubredditToFavorites = (subreddit) => {
   return {
     type: ADD_TO_FAVORITES,
     subreddit,
+  };
+};
+
+export const requestPopularSubList = () => {
+  return {
+    type: REQUEST_POPULAR_SUBS,
+  };
+};
+export const recievePopularSubList = (json) => {
+  console.log("JSON from Reddit popular subs:", json);
+  return {
+    type: RECIEVE_POPULAR_SUBS,
+    subredditList: json.map((sub) => sub.data),
+    recievedAt: Date.now(),
+  };
+};
+
+export const fetchPopularSubList = () => {
+  return (dispatch) => {
+    dispatch(requestPopularSubList());
+
+    return fetch(`https://www.reddit.com/subreddits.json`)
+      .then((result) => result.json())
+      .then((json) => {
+        dispatch(recievePopularSubList(json.data.children));
+      });
   };
 };
