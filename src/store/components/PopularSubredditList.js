@@ -1,13 +1,21 @@
 import React from "react";
+import "./PopularSubredditList.css";
 
-function PopularSubredditList({ popularSubreddits }) {
+function PopularSubredditList({ popularSubreddits, onClick }) {
   if (popularSubreddits.items.length > 0) {
     return (
       <div>
-        <ul>
+        <ul className={"popularSubItemContainer"}>
           {popularSubreddits["items"].map((sub, index) => (
-            <li key={index}>
-              <div>{sub["title"]}</div>
+            <li key={index} className={"popularSubItem"}>
+              {/* Very different from (e) => onClick(sub) that only gives the event object */}
+              <button
+                onClick={() => {
+                  onClick(sub);
+                }}
+              >
+                {sub["title"]}
+              </button>
             </li>
           ))}
         </ul>

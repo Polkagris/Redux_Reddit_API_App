@@ -1,0 +1,8 @@
+.favoriteSubItemContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.favoriteSubItem {
+  list-style-type: none;
+}

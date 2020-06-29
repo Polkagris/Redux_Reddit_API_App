@@ -1,0 +1,8 @@
+.popularSubItemContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.popularSubItem {
+  list-style-type: none;
+}

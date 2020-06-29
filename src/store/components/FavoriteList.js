@@ -1,24 +1,15 @@
 import React from "react";
+import "./FavoriteList.css";
 
 function FavoriteList({ favorites, favoriteArray, localStorageFav }) {
   let favArray = [];
   favArray.push(localStorageFav());
 
-  // console.log(
-  //   "############# retrieveFromLocalStorage ##############",
-  //   localStorageFav()
-  // );
-
-  console.log(
-    "############# retrieveFromLocalStorage favoriteArray ##############",
-    favoriteArray
-  );
-
   if (favoriteArray.length > 0) {
     return (
-      <ul>
+      <ul className={"favoriteSubItemContainer"}>
         {favoriteArray.map((fav, index) => (
-          <li key={index}>
+          <li key={index} className={"favoriteSubItem"}>
             <button>{fav}</button>
           </li>
         ))}

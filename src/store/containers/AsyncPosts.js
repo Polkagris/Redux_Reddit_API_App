@@ -40,6 +40,7 @@ import PostPicker from "../components/PostPicker";
 import { Switch, Route, useHistory } from "react-router-dom";
 import FavoriteList from "../components/FavoriteList";
 import PopularSubredditList from "../components/PopularSubredditList";
+import "./AsyncPosts.css";
 
 function AsyncPosts({
   posts,
@@ -73,6 +74,12 @@ function AsyncPosts({
     dispatch(showSinglePost(posts, id));
   };
 
+  const handlePopularSubClick = (popularSub) => {
+    console.log("Popular sub click:", popularSub);
+    dispatch(selectSubreddit(popularSub.display_name));
+    dispatch(fetchPosts(popularSub.display_name));
+  };
+
   const retrieveFromLocalStorage = () => {
     const savedData = JSON.parse(localStorage.favorites || null) || [];
     console.log("retrieveFromLocalStorage localStorageArray:", savedData);
@@ -104,21 +111,33 @@ function AsyncPosts({
     <div>
       <p>
         Done: Click on post to route to new path with spesific info about post
+        Done: Add favourite subreddit - save to local storage
+        <p>Popular subreddits https://www.reddit.com/subreddits.json</p>
+        <p>Next: Create another thunk</p>
       </p>
-      <h2>Add favourite subreddit - save to local storage</h2>
-      <p>Popular subreddits https://www.reddit.com/subreddits.json</p>
-      <p>Next: Create another thunk</p>
-      <p>Next: Create selectors</p>
+
+      <h2>Next: Create selectors</h2>
       <p>Next: Test reducer</p>
       <p>Next: Test actions</p>
       <p>Next: Create a saga</p>
       <p>Next: Create error handling for thunk</p>
-      <h1>{subreddit}</h1>
-      <PostPicker onChange={handleInputChange} onClick={handleSubmit} />
-      {sub && <button onClick={handleSubmit}>Search</button>}
 
-      <h2>Popular Subs</h2>
-      <PopularSubredditList popularSubreddits={popularSubreddits} />
+      <div className={"searchSubContainer"}>
+        <h1>{selectedSubreddit}</h1>
+        <div>Search for Subreddit</div>
+        <PostPicker onChange={handleInputChange} onClick={handleSubmit} />
+        {sub && <button onClick={handleSubmit}>Search</button>}
+      </div>
+
+      <div className={"popularSubContainer"}>
+        <h2>Popular Subs</h2>
+        <div className={"PopularSubredditList"}>
+          <PopularSubredditList
+            popularSubreddits={popularSubreddits}
+            onClick={handlePopularSubClick}
+          />
+        </div>
+      </div>
 
       {sub && (
         <button onClick={() => addToFavoritesHandler(sub)}>
