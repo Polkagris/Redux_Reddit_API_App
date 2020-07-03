@@ -58,7 +58,6 @@ function AsyncPosts({
 
   const retrieveFromLocalStorage = () => {
     const savedData = JSON.parse(localStorage.favorites || null) || [];
-    console.log("retrieveFromLocalStorage localStorageArray:", savedData);
     return savedData;
   };
 
@@ -103,12 +102,12 @@ function AsyncPosts({
 
   return (
     <div>
-      <p>
+      <div>
         Done: Click on post to route to new path with spesific info about post
         Done: Add favourite subreddit - save to local storage
         <p>Popular subreddits https://www.reddit.com/subreddits.json</p>
         <p>Next: Create another thunk</p>
-      </p>
+      </div>
 
       <h2>Next: Create selectors</h2>
       <p>Next: Test reducer</p>
@@ -163,14 +162,14 @@ function AsyncPosts({
 
       {!isFetching && <h2>Posts</h2>}
       {isFetching && <h2>Loading...</h2>}
-      <p>
+      <div>
         Last updated:{" "}
         {!recievedAt ? (
           <div>Fetching date...</div>
         ) : (
           new Date(recievedAt).toLocaleTimeString()
         )}
-      </p>
+      </div>
 
       {posts.length > 0 && <PostList posts={posts} onClick={handlePostClick} />}
     </div>

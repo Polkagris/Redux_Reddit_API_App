@@ -134,7 +134,6 @@ export const fetchPopularSubList = () => {
 };
 
 export const deleteFromFavorites = (favoriteArray, index) => {
-  // favoriteArray.splice(index, 1);
   return {
     type: DELETE_FROM_FAVORITES,
     favoriteArray,
@@ -147,9 +146,3 @@ export const getFavoritesFromLocalStorage = (favoriteArray) => {
     favoriteArray,
   };
 };
-
-// export const getFavorites = (favoriteArray) => {
-//   return (dispatch) => {
-//     dispatch(getFavoritesFromLocalStorage(favoriteArray));
-//   };
-// };

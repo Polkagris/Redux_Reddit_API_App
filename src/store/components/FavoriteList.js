@@ -8,9 +8,6 @@ function FavoriteList({
   deleteFavorite,
   favorites,
 }) {
-  // let favArray = [];
-  // favArray.push(localStorageFav());
-
   if (favoriteArray.length > 0) {
     return (
       <ul className={"favoriteSubItemContainer"}>

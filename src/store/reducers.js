@@ -137,7 +137,7 @@ const postsBySubreddit = (state = {}, action) => {
   }
 };
 
-// Selectors
+// Selectors -  Refactor to state is only needed here!
 export const selectFavorites = (state) => {
   return state.favorites;
 };
