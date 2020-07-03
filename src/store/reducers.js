@@ -1,32 +1,4 @@
-// {
-//     selectedSubreddit: 'frontend',
-//     popularSubreddits: [],
-//     postsBySubreddit: {
-//       frontend: {
-//         isFetching: true,
-//         didInvalidate: false,
-//         items: []
-//       },
-//       reactjs: {
-//         isFetching: false,
-//         didInvalidate: false,
-//         lastUpdated: 1439478405547,
-//         items: [
-//           {
-//             id: 42,
-//             title: 'Confusion about Flux and Relay'
-//           },
-//           {
-//             id: 500,
-//             title: 'Creating a Simple Application Using React JS and Flux Architecture'
-//           }
-//         ]
-//       }
-//     }
-//   }
-
 import { combineReducers } from "redux";
-
 import {
   SELECT_SUBREDDIT,
   INVALIDATE_SUBREDDIT,
@@ -51,6 +23,10 @@ const selectedSubreddit = (state = "reactjs", action) => {
   }
 };
 
+export const selectSubreddit = (state) => {
+  return state.selectedSubreddit;
+};
+
 const popularSubreddits = (
   state = { isFetching: false, items: [] },
   action
@@ -73,7 +49,6 @@ const popularSubreddits = (
   }
 };
 
-// IMPORTANT: hvis i reducer: return {...state, action.osv: etc} - så blir det forrige med. feks: [test, og det nye]
 const selectedSinglePost = (
   state = { title: "test", selftext: "test", thumbnail: "" },
   action
@@ -160,6 +135,28 @@ const postsBySubreddit = (state = {}, action) => {
     default:
       return state;
   }
+};
+
+// Selectors
+export const selectFavorites = (state) => {
+  return state.favorites;
+};
+
+export const selectPopularSubreddits = (state) => {
+  return state.popularSubreddits;
+};
+
+export const selectCurrentSubreddit = (state) => {
+  const { selectedSubreddit, postsBySubreddit } = state;
+  const { isFetching, recievedAt, items: posts } = postsBySubreddit[
+    selectedSubreddit
+  ] || { isFetching: true, posts: [] };
+  return {
+    posts,
+    selectedSubreddit,
+    isFetching,
+    recievedAt,
+  };
 };
 
 const rootReducer = combineReducers({

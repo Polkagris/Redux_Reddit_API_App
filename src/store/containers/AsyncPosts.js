@@ -1,29 +1,3 @@
-// {
-//     selectedSubreddit: 'frontend',
-//     postsBySubreddit: {
-//       frontend: {
-//         isFetching: true,
-//         didInvalidate: false,
-//         items: []
-//       },
-//       reactjs: {
-//         isFetching: false,
-//         didInvalidate: false,
-//         lastUpdated: 1439478405547,
-//         items: [
-//           {
-//             id: 42,
-//             title: 'Confusion about Flux and Relay'
-//           },
-//           {
-//             id: 500,
-//             title: 'Creating a Simple Application Using React JS and Flux Architecture'
-//           }
-//         ]
-//       }
-//     }
-//   }
-
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import PostList from "../components/PostList";
@@ -43,6 +17,11 @@ import { Switch, Route, useHistory } from "react-router-dom";
 import FavoriteList from "../components/FavoriteList";
 import PopularSubredditList from "../components/PopularSubredditList";
 import "./AsyncPosts.css";
+import {
+  selectFavorites,
+  selectPopularSubreddits,
+  selectCurrentSubreddit,
+} from "../reducers";
 
 function AsyncPosts({
   posts,
@@ -60,7 +39,6 @@ function AsyncPosts({
 
   const handleInputChange = (e) => {
     e.preventDefault();
-    // console.log("CHANGE input:", e.target.value);
     const newSubreddit = e.target.value;
     setSub(newSubreddit);
   };
@@ -69,13 +47,11 @@ function AsyncPosts({
     dispatch(fetchPosts(sub));
   };
   const handlePostClick = (id) => {
-    console.log("INDEX FROM POSTS:", id);
     dispatch(goToSinglePost(history.location));
     dispatch(showSinglePost(posts, id));
   };
 
   const handlePopularSubClick = (popularSub) => {
-    console.log("Popular sub click:", popularSub);
     dispatch(selectSubreddit(popularSub.display_name));
     dispatch(fetchPosts(popularSub.display_name));
   };
@@ -96,27 +72,12 @@ function AsyncPosts({
   };
 
   const handleFavoriteSubClick = (favoriteSub, index) => {
-    console.log(
-      "================ Clicked favorite! ===================",
-      favoriteSub,
-      "index:",
-      favorites[index],
-      "delete state:",
-      deleteFavorite,
-      "index:",
-      index
-    );
     if (deleteFavorite) {
-      // localStorage.removeItem(favorites[index]);
-      // favorites.splice(index, 1);
       let savedData = JSON.parse(localStorage.favorites || null) || [];
       savedData.splice(index, 1);
       localStorage.favorites = JSON.stringify(savedData);
-      console.log("LOCAL STORAGE FAV:", savedData);
       setFavoriteArray(savedData);
-      console.log("FAVORITES ARRAY AFTER DELETE!", favoriteArray);
       dispatch(deleteFromFavorites(favoriteArray, index));
-      console.log("FAVORITES ARRAY AFTER DELETE DISPATCH!", favoriteArray);
     } else {
       dispatch(selectSubreddit(favoriteSub));
       dispatch(fetchPosts(favoriteSub));
@@ -124,22 +85,15 @@ function AsyncPosts({
   };
 
   const deleteFavoriteHandler = () => {
-    console.log(" `````````````````````````Delete is:", deleteFavorite);
     setDeleteFavorite(!deleteFavorite);
   };
 
   useEffect(() => {
     dispatch(fetchPopularSubList());
     dispatch(getFavoritesFromLocalStorage(favoriteArray));
-    console.log("%%%%%%%%%%%% USEEFFECT is run on render", favoriteArray);
   }, []);
 
   useEffect(() => {
-    console.log(
-      "%%%%%%%%%%%% USEEFFECT is run after changing favoriteArray",
-      favoriteArray
-    );
-    // dispatch(getFavoritesFromLocalStorage(favoriteArray));
     localStorage.favorites = JSON.stringify(favoriteArray);
   }, [favoriteArray]);
 
@@ -160,6 +114,14 @@ function AsyncPosts({
       <p>Next: Test reducer</p>
       <p>Next: Test actions</p>
       <p>Next: Create a saga</p>
+      <p>
+        Next: CFix /:id routing so not every link gets purple when one is
+        clicked
+      </p>
+      <p>
+        Next: Save all API responses to local storage for a period and check if
+        need to update
+      </p>
       <p>Next: Create error handling for thunk</p>
 
       <div className={"searchSubContainer"}>
@@ -188,7 +150,6 @@ function AsyncPosts({
       <h2>My favorite subs</h2>
       <FavoriteList
         deleteFavorite={deleteFavorite}
-        // localStorageFav={retrieveFromLocalStorage}
         favoriteArray={favoriteArray}
         onClick={handleFavoriteSubClick}
         favorites={favorites}
@@ -217,23 +178,13 @@ function AsyncPosts({
 }
 
 const mapStateToProps = (state) => {
-  const {
-    selectedSubreddit,
-    postsBySubreddit,
-    favorites,
-    popularSubreddits,
-  } = state;
-  console.log("STATE:", postsBySubreddit);
-  const { isFetching, recievedAt, items: posts } = postsBySubreddit[
-    selectedSubreddit
-  ] || { isFetching: true, posts: [] };
   return {
-    posts,
-    selectedSubreddit,
-    isFetching,
-    recievedAt,
-    favorites,
-    popularSubreddits,
+    posts: selectCurrentSubreddit(state).posts,
+    selectedSubreddit: selectCurrentSubreddit(state).selectedSubreddit,
+    isFetching: selectCurrentSubreddit(state).isFetching,
+    recievedAt: selectCurrentSubreddit(state).recievedAt,
+    favorites: selectFavorites(state),
+    popularSubreddits: selectPopularSubreddits(state),
   };
 };
 
