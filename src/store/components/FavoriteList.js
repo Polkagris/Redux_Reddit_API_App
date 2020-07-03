@@ -1,16 +1,26 @@
 import React from "react";
 import "./FavoriteList.css";
 
-function FavoriteList({ favorites, favoriteArray, localStorageFav }) {
-  let favArray = [];
-  favArray.push(localStorageFav());
+function FavoriteList({
+  favoriteArray,
+  localStorageFav,
+  onClick,
+  deleteFavorite,
+  favorites,
+}) {
+  // let favArray = [];
+  // favArray.push(localStorageFav());
 
   if (favoriteArray.length > 0) {
     return (
       <ul className={"favoriteSubItemContainer"}>
         {favoriteArray.map((fav, index) => (
-          <li key={index} className={"favoriteSubItem"}>
-            <button>{fav}</button>
+          <li
+            style={{ opacity: deleteFavorite ? 0.2 : 1 }}
+            key={index}
+            className={"favoriteSubItem"}
+          >
+            <button onClick={() => onClick(fav, index)}>{fav}</button>
           </li>
         ))}
       </ul>

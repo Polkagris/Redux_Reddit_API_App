@@ -35,6 +35,8 @@ import {
   goToSinglePost,
   addSubredditToFavorites,
   fetchPopularSubList,
+  deleteFromFavorites,
+  getFavoritesFromLocalStorage,
 } from "../actions";
 import PostPicker from "../components/PostPicker";
 import { Switch, Route, useHistory } from "react-router-dom";
@@ -53,22 +55,20 @@ function AsyncPosts({
   popularSubreddits,
 }) {
   const [sub, setSub] = useState("");
+  const [deleteFavorite, setDeleteFavorite] = useState(false);
   let history = useHistory();
 
   const handleInputChange = (e) => {
     e.preventDefault();
-    console.log("CHANGE input:", e.target.value);
+    // console.log("CHANGE input:", e.target.value);
     const newSubreddit = e.target.value;
     setSub(newSubreddit);
   };
-
   const handleSubmit = () => {
     dispatch(selectSubreddit(sub));
     dispatch(fetchPosts(sub));
   };
-
   const handlePostClick = (id) => {
-    // dispatch action to show a post
     console.log("INDEX FROM POSTS:", id);
     dispatch(goToSinglePost(history.location));
     dispatch(showSinglePost(posts, id));
@@ -95,11 +95,51 @@ function AsyncPosts({
     localStorage.favorites = JSON.stringify(favoriteArray);
   };
 
+  const handleFavoriteSubClick = (favoriteSub, index) => {
+    console.log(
+      "================ Clicked favorite! ===================",
+      favoriteSub,
+      "index:",
+      favorites[index],
+      "delete state:",
+      deleteFavorite,
+      "index:",
+      index
+    );
+    if (deleteFavorite) {
+      // localStorage.removeItem(favorites[index]);
+      // favorites.splice(index, 1);
+      let savedData = JSON.parse(localStorage.favorites || null) || [];
+      savedData.splice(index, 1);
+      localStorage.favorites = JSON.stringify(savedData);
+      console.log("LOCAL STORAGE FAV:", savedData);
+      setFavoriteArray(savedData);
+      console.log("FAVORITES ARRAY AFTER DELETE!", favoriteArray);
+      dispatch(deleteFromFavorites(favoriteArray, index));
+      console.log("FAVORITES ARRAY AFTER DELETE DISPATCH!", favoriteArray);
+    } else {
+      dispatch(selectSubreddit(favoriteSub));
+      dispatch(fetchPosts(favoriteSub));
+    }
+  };
+
+  const deleteFavoriteHandler = () => {
+    console.log(" `````````````````````````Delete is:", deleteFavorite);
+    setDeleteFavorite(!deleteFavorite);
+  };
+
   useEffect(() => {
     dispatch(fetchPopularSubList());
+    dispatch(getFavoritesFromLocalStorage(favoriteArray));
+    console.log("%%%%%%%%%%%% USEEFFECT is run on render", favoriteArray);
   }, []);
 
   useEffect(() => {
+    console.log(
+      "%%%%%%%%%%%% USEEFFECT is run after changing favoriteArray",
+      favoriteArray
+    );
+    // dispatch(getFavoritesFromLocalStorage(favoriteArray));
     localStorage.favorites = JSON.stringify(favoriteArray);
   }, [favoriteArray]);
 
@@ -127,6 +167,12 @@ function AsyncPosts({
         <div>Search for Subreddit</div>
         <PostPicker onChange={handleInputChange} onClick={handleSubmit} />
         {sub && <button onClick={handleSubmit}>Search</button>}
+
+        {sub && (
+          <button onClick={() => addToFavoritesHandler(sub)}>
+            Add to favourites
+          </button>
+        )}
       </div>
 
       <div className={"popularSubContainer"}>
@@ -139,18 +185,20 @@ function AsyncPosts({
         </div>
       </div>
 
-      {sub && (
-        <button onClick={() => addToFavoritesHandler(sub)}>
-          Add to favourites
-        </button>
-      )}
-
       <h2>My favorite subs</h2>
       <FavoriteList
-        favorites={favorites}
-        localStorageFav={retrieveFromLocalStorage}
+        deleteFavorite={deleteFavorite}
+        // localStorageFav={retrieveFromLocalStorage}
         favoriteArray={favoriteArray}
+        onClick={handleFavoriteSubClick}
+        favorites={favorites}
       />
+      <button
+        style={{ backgroundColor: deleteFavorite ? "#DF3A01" : null }}
+        onClick={deleteFavoriteHandler}
+      >
+        Delete favorite
+      </button>
 
       {!isFetching && <h2>Posts</h2>}
       {isFetching && <h2>Loading...</h2>}

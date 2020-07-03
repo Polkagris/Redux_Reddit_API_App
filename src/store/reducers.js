@@ -36,8 +36,10 @@ import {
   GO_BACK,
   TO_SINGLEPOST,
   ADD_TO_FAVORITES,
+  DELETE_FROM_FAVORITES,
   REQUEST_POPULAR_SUBS,
   RECIEVE_POPULAR_SUBS,
+  GET_FAVORITES,
 } from "./actions";
 
 const selectedSubreddit = (state = "reactjs", action) => {
@@ -105,8 +107,12 @@ const navigation = (state = { page: "home" }, action) => {
 
 const favorites = (state = [], action) => {
   switch (action.type) {
+    case GET_FAVORITES:
+      return action.favoriteArray;
     case ADD_TO_FAVORITES:
       return [...state, action.subreddit];
+    case DELETE_FROM_FAVORITES:
+      return action.favoriteArray;
     default:
       return state;
   }

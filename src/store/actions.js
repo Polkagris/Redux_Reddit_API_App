@@ -9,6 +9,8 @@ export const TO_SINGLEPOST = "TO_SINGLEPOST";
 export const ADD_TO_FAVORITES = "ADD_TO_FAVORITES";
 export const REQUEST_POPULAR_SUBS = "REQUEST_POPULAR_SUBS";
 export const RECIEVE_POPULAR_SUBS = "RECIEVE_POPULAR_SUBS";
+export const DELETE_FROM_FAVORITES = "DELETE_FROM_FAVORITES";
+export const GET_FAVORITES = "GET_FAVORITES";
 
 export const invalidateSubreddit = (subreddit) => {
   return {
@@ -130,3 +132,24 @@ export const fetchPopularSubList = () => {
       });
   };
 };
+
+export const deleteFromFavorites = (favoriteArray, index) => {
+  // favoriteArray.splice(index, 1);
+  return {
+    type: DELETE_FROM_FAVORITES,
+    favoriteArray,
+  };
+};
+
+export const getFavoritesFromLocalStorage = (favoriteArray) => {
+  return {
+    type: GET_FAVORITES,
+    favoriteArray,
+  };
+};
+
+// export const getFavorites = (favoriteArray) => {
+//   return (dispatch) => {
+//     dispatch(getFavoritesFromLocalStorage(favoriteArray));
+//   };
+// };
