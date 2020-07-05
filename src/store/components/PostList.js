@@ -4,13 +4,13 @@ import { useRouteMatch, Route, Switch, Link } from "react-router-dom";
 import SinglePost from "../containers/SinglePost";
 
 function PostList({ posts, onClick }) {
-  let match = useRouteMatch();
-  console.log("¤¤¤¤ PATH ¤¤¤¤¤:", match);
+  // let match = useRouteMatch();
+  // console.log("¤¤¤¤ MATCH ¤¤¤¤¤:", match);
 
   return (
     <div>
       <Switch>
-        <Route path={"/post/:postId"}>
+        <Route path={"/post/:id"}>
           <SinglePost />
         </Route>
         <Route path={`/`}>

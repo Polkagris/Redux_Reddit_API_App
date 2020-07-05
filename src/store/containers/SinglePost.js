@@ -8,12 +8,12 @@ import { useEffect } from "react";
 function SinglePost({ selectedSinglePost, dispatch }) {
   let match = useRouteMatch();
   let history = useHistory();
-  console.log("¤¤¤¤ history ¤¤¤¤¤:", history);
+  // console.log("¤¤¤¤ history ¤¤¤¤¤:", history);
   // console.log("SELFTEXT:", selectedSinglePost.selftext);
 
   const goBack = () => {
-    console.log("¤¤¤¤ goBack ¤¤¤¤¤:", history);
-    console.log("¤¤¤¤ goBack ¤¤¤¤¤:", history.location);
+    // console.log("¤¤¤¤ goBack ¤¤¤¤¤:", history);
+    // console.log("¤¤¤¤ goBack ¤¤¤¤¤:", history.location);
 
     dispatch(goBackNavigation(history.location));
     history.goBack();

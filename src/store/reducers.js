@@ -50,7 +50,11 @@ const popularSubreddits = (
 };
 
 const selectedSinglePost = (
-  state = { title: "test", selftext: "test", thumbnail: "" },
+  state = {
+    title: "No post here I'm afraid.",
+    selftext: "Sorry, no.",
+    thumbnail: "",
+  },
   action
 ) => {
   switch (action.type) {

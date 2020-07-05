@@ -11,7 +11,7 @@ function Post({ post, onClick }) {
   return (
     <div>
       <li key={post.id} onClick={() => onClick(post.id)}>
-        <Link to={`/post/:postId`}>{post.title}</Link>
+        <Link to={`/post/${post.id}`}>{post.title}</Link>
       </li>
     </div>
   );
