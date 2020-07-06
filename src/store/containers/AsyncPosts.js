@@ -47,6 +47,7 @@ function AsyncPosts({
     dispatch(fetchPosts(sub));
   };
   const handlePostClick = (id) => {
+    console.log("POST id:", id);
     dispatch(goToSinglePost(history.location));
     dispatch(showSinglePost(posts, id));
   };

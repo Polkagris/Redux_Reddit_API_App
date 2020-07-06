@@ -1,0 +1,14 @@
+.linkContainer {
+  display: flex;
+  flex-wrap: wrap;
+  border: 1px solid black;
+  margin: 10px 0;
+  padding: 15px;
+}
+
+.thumbnail {
+}
+
+.link {
+  width: 100%;
+}

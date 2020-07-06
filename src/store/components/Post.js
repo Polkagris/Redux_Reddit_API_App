@@ -1,4 +1,5 @@
 import React from "react";
+import "./Post.css";
 import {
   useParams,
   Link,
@@ -9,9 +10,16 @@ import {
 
 function Post({ post, onClick }) {
   return (
-    <div>
-      <li key={post.id} onClick={() => onClick(post.id)}>
-        <Link to={`/post/${post.id}`}>{post.title}</Link>
+    <div className="postWrapper">
+      <li
+        key={post.id}
+        className="linkContainer"
+        onClick={() => onClick(post.id)}
+      >
+        <img src={post.thumbnail} alt="" className="thumbnail" />
+        <Link to={`/post/${post.id}`} className="link">
+          {post.title}
+        </Link>
       </li>
     </div>
   );

@@ -54,6 +54,8 @@ const selectedSinglePost = (
     title: "No post here I'm afraid.",
     selftext: "Sorry, no.",
     thumbnail: "",
+    video: "",
+    isVideo: false,
   },
   action
 ) => {
@@ -63,6 +65,8 @@ const selectedSinglePost = (
         title: action.post.title,
         selftext: action.post.selftext,
         thumbnail: action.post.thumbnail,
+        video: action.post,
+        isVideo: action.post.is_video,
       };
     default:
       return state;

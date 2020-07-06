@@ -1,36 +1,39 @@
 import React from "react";
-import { useRouteMatch } from "react-router-dom";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { selectSubreddit, goBackNavigation, goToSinglePost } from "../actions";
-import { useEffect } from "react";
+import { goBackNavigation } from "../actions";
+import ReactPlayer from "react-player/lazy";
 
 function SinglePost({ selectedSinglePost, dispatch }) {
-  let match = useRouteMatch();
   let history = useHistory();
-  // console.log("¤¤¤¤ history ¤¤¤¤¤:", history);
-  // console.log("SELFTEXT:", selectedSinglePost.selftext);
-
   const goBack = () => {
-    // console.log("¤¤¤¤ goBack ¤¤¤¤¤:", history);
-    // console.log("¤¤¤¤ goBack ¤¤¤¤¤:", history.location);
-
     dispatch(goBackNavigation(history.location));
     history.goBack();
   };
 
-  // useEffect(() => {
-  //   dispatch(goToSinglePost(history.location));
-  // });
+  // if (selectedSinglePost.video["media"]) {
+  //   console.log("VIDEO:", selectedSinglePost.video);
+  // } else {
+  //   console.log("NOT DEFINED VIDEO secure_media!", selectedSinglePost.video);
+  // }
 
   return (
     <div>
-      {/* <button onClick={goBack}>Go back</button> */}
       <button onClick={goBack}>Go back</button>
       <h1>{selectedSinglePost.title}</h1>
       <p>{selectedSinglePost.selftext}</p>
       {selectedSinglePost.thumbnail && (
         <img src={selectedSinglePost.thumbnail} alt="" />
+      )}
+      {selectedSinglePost.isVideo === true && (
+        <ReactPlayer
+          url={
+            selectedSinglePost.video.media.reddit_video.scrubber_media_url
+              ? selectedSinglePost.video.media.reddit_video.scrubber_media_url
+              : selectedSinglePost.video.media.reddit_video.fallback_url
+          }
+          playing
+        />
       )}
     </div>
   );
